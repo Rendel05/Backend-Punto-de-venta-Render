@@ -10,13 +10,13 @@ import {
 } from '../controllers/productsController.js'
 import upload from '../middlewares/upload.js'
 import { uploadToCloudinary } from '../middlewares/cloudinaryUpload.js'
-
+import { verifyToken } from '../middlewares/authMiddleware.js'
 
 const router = express.Router()
 
-
 router.post(
   '/products',
+  verifyToken,
   upload.single('image'),
   uploadToCloudinary,
   createProduct
@@ -26,8 +26,8 @@ router.get('/products/search', searchProduct)
 router.get('/products/category/:id', getProductsByCategory)
 router.get('/products/:id', getProduct)
 
-router.post('/products', createProduct)
-router.put('/products/:id', editProduct)
-router.delete('/products/:id', removeProduct)
+router.post('/products', verifyToken, createProduct)
+router.put('/products/:id', verifyToken, editProduct)
+router.delete('/products/:id', verifyToken, removeProduct)
 
 export default router

@@ -7,6 +7,7 @@ import {
   updateContent,
   removeContent
 } from '../controllers/editablePagesController.js'
+import { verifyToken } from '../middlewares/authMiddleware.js'
 
 const router = express.Router()
 
@@ -14,10 +15,10 @@ router.get('/pages', getPages)
 
 router.get('/pages/:id', getPageContent)
 
-router.post('/pages/content', createContent)
+router.post('/pages/content', verifyToken, createContent)
 
-router.put('/pages/content/:id', updateContent)
+router.put('/pages/content/:id', verifyToken, updateContent)
 
-router.delete('/pages/content/:id', removeContent)
+router.delete('/pages/content/:id', verifyToken, removeContent)
 
 export default router
