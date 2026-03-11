@@ -26,3 +26,56 @@ export const addNewOffer = async (product_id,offer_price,start_date,end_date) =>
     )
     return result.affectedRows
 }
+
+export const getActiveOffers = async () => {
+
+  const query = `
+    SELECT 
+        o.oferta_id,
+        o.producto_id,
+        o.precio_oferta,
+        o.fecha_inicio,
+        o.fecha_fin,
+        p.nombre,
+        p.precio_venta,
+        p.ImagenText
+    FROM ofertas o
+    INNER JOIN productos p 
+        ON o.producto_id = p.producto_id
+    WHERE 
+        o.activo = 1
+        AND CURDATE() BETWEEN o.fecha_inicio AND o.fecha_fin
+    ORDER BY o.fecha_fin ASC
+    LIMIT 20
+  `;
+
+  const [rows] = await db.query(query);
+
+  return rows;
+
+}
+
+export const updateOffer = async (
+  offer_id,
+  product_id,
+  offer_price,
+  start_date,
+  end_date,
+  active
+) => {
+
+  const [result] = await db.query(
+    `UPDATE ofertas 
+     SET producto_id = ?, 
+         precio_oferta = ?, 
+         fecha_inicio = ?, 
+         fecha_fin = ?, 
+         activo = ?
+     WHERE oferta_id = ?`,
+    [product_id, offer_price, start_date, end_date, active, offer_id]
+  );
+
+  return result.affectedRows;
+
+}
+

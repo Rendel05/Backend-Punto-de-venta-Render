@@ -1,6 +1,7 @@
 import {
   getAllProducts,
   getProductByCategory,
+  getPopularProducts,
   getProductById,
   addProduct,
   updateProduct,
@@ -24,6 +25,28 @@ export const getProducts = async (req, res) => {
   } catch (error) {
 
     res.status(500).json({ message: "Error al obtener productos" })
+
+  }
+
+}
+
+export const getPopularProductsC = async (req, res) => {
+
+  try {
+
+    const products = await getPopularProducts();
+
+    res.json({
+      data: products
+    });
+
+  } catch (error) {
+
+    console.error(error);
+
+    res.status(500).json({
+      message: "Error obteniendo productos populares"
+    });
 
   }
 

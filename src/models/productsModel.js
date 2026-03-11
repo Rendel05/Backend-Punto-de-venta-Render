@@ -107,3 +107,24 @@ export const searchProducts = async(search, page, limit) =>{
     )
     return rows
 }
+
+
+export const getPopularProducts = async () => {
+
+  const query = `
+    SELECT 
+        p.*, 
+        COUNT(dv.producto_id) AS totalVentas
+    FROM productos p
+    LEFT JOIN detalle_ventas dv 
+        ON dv.producto_id = p.producto_id
+    GROUP BY p.producto_id
+    ORDER BY totalVentas DESC
+    LIMIT 10
+  `;
+
+  const [rows] = await pool.query(query);
+
+  return rows;
+
+};

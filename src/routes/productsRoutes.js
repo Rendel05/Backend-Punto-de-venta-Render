@@ -2,6 +2,7 @@ import express from 'express'
 import {
   getProducts,
   getProductsByCategory,
+  getPopularProductsC,
   getProduct,
   createProduct,
   editProduct,
@@ -11,6 +12,7 @@ import {
 import upload from '../middlewares/upload.js'
 import { uploadToCloudinary } from '../middlewares/cloudinaryUpload.js'
 import { verifyToken } from '../middlewares/authMiddleware.js'
+
 
 const router = express.Router()
 
@@ -25,6 +27,7 @@ router.get('/products', getProducts)
 router.get('/products/search', searchProduct)
 router.get('/products/category/:id', getProductsByCategory)
 router.get('/products/:id', getProduct)
+router.get('/products/popular', getPopularProductsC)
 
 router.post('/products', verifyToken, createProduct)
 router.put('/products/:id', verifyToken, editProduct)

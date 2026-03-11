@@ -1,6 +1,7 @@
 import {
   getAllOffers,
-  addNewOffer
+  addNewOffer,
+  getActiveOffers
 } from '../models/offersModel.js'
 
 
@@ -55,3 +56,72 @@ export const createOffer = async (req, res) => {
   }
 
 }
+
+export const getActiveOffersController = async (req, res) => {
+
+  try {
+
+    const offers = await getActiveOffers();
+
+    res.json({
+      data: offers
+    });
+
+  } catch (error) {
+
+    console.error(error);
+
+    res.status(500).json({
+      message: "Error obteniendo ofertas activas"
+    });
+
+  }
+
+};
+
+import { updateOffer } from "../models/offersModel.js";
+
+export const updateOfferController = async (req, res) => {
+
+  try {
+
+    const { id } = req.params;
+
+    const {
+      product_id,
+      offer_price,
+      start_date,
+      end_date,
+      active
+    } = req.body;
+
+    const affectedRows = await updateOffer(
+      id,
+      product_id,
+      offer_price,
+      start_date,
+      end_date,
+      active
+    );
+
+    if (affectedRows === 0) {
+      return res.status(404).json({
+        message: "Oferta no encontrada"
+      });
+    }
+
+    res.json({
+      message: "Oferta actualizada correctamente"
+    });
+
+  } catch (error) {
+
+    console.error(error);
+
+    res.status(500).json({
+      message: "Error actualizando oferta"
+    });
+
+  }
+
+};
