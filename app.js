@@ -15,7 +15,6 @@ const app = express()
 
 app.use(express.json())
 
-// CORS abierto (luego puedes restringirlo)
 app.use(cors())
 
 app.use('/api', suppliersRoutes)

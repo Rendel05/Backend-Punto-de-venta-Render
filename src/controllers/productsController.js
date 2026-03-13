@@ -34,24 +34,17 @@ export const getPopularProductsC = async (req, res) => {
 
   try {
 
-    const products = await getPopularProducts();
+    const products = await getPopularProducts()
 
-    res.json({
-      data: products
-    });
+    res.json(products)
 
   } catch (error) {
 
-    console.error(error);
-
-    res.status(500).json({
-      message: "Error obteniendo productos populares"
-    });
+    res.status(500).json({ message: "Error obteniendo productos populares" })
 
   }
 
 }
-
 
 export const getProductsByCategory = async (req, res) => {
 

@@ -1,7 +1,8 @@
 import {
   getAllOffers,
   addNewOffer,
-  getActiveOffers
+  getActiveOffers,
+  updateOffer
 } from '../models/offersModel.js'
 
 
@@ -61,31 +62,24 @@ export const getActiveOffersController = async (req, res) => {
 
   try {
 
-    const offers = await getActiveOffers();
+    const offers = await getActiveOffers()
 
-    res.json({
-      data: offers
-    });
+    res.json(offers)
 
   } catch (error) {
 
-    console.error(error);
-
-    res.status(500).json({
-      message: "Error obteniendo ofertas activas"
-    });
+    res.status(500).json({ message: "Error obteniendo ofertas activas" })
 
   }
 
-};
+}
 
-import { updateOffer } from "../models/offersModel.js";
 
 export const updateOfferController = async (req, res) => {
 
   try {
 
-    const { id } = req.params;
+    const { id } = req.params
 
     const {
       product_id,
@@ -93,35 +87,27 @@ export const updateOfferController = async (req, res) => {
       start_date,
       end_date,
       active
-    } = req.body;
+    } = req.body
 
-    const affectedRows = await updateOffer(
+    const result = await updateOffer(
       id,
       product_id,
       offer_price,
       start_date,
       end_date,
       active
-    );
+    )
 
-    if (affectedRows === 0) {
-      return res.status(404).json({
-        message: "Oferta no encontrada"
-      });
+    if (result > 0) {
+      res.json({ message: "Oferta actualizada correctamente" })
+    } else {
+      res.status(404).json({ message: "Oferta no encontrada" })
     }
-
-    res.json({
-      message: "Oferta actualizada correctamente"
-    });
 
   } catch (error) {
 
-    console.error(error);
-
-    res.status(500).json({
-      message: "Error actualizando oferta"
-    });
+    res.status(500).json({ message: "Error actualizando oferta" })
 
   }
 
-};
+}

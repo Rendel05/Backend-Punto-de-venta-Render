@@ -25,9 +25,9 @@ router.post(
 )
 router.get('/products', getProducts)
 router.get('/products/search', searchProduct)
+router.get('/products/popular', getPopularProductsC)
 router.get('/products/category/:id', getProductsByCategory)
 router.get('/products/:id', getProduct)
-router.get('/products/popular', getPopularProductsC)
 
 router.post('/products', verifyToken, createProduct)
 router.put('/products/:id', verifyToken, editProduct)
