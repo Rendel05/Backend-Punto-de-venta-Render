@@ -123,7 +123,7 @@ export const getPopularProducts = async () => {
     LIMIT 10
   `;
 
-  const [rows] = await pool.query(query);
+  const [rows] = await db.query(query);
 
   return rows;
 
