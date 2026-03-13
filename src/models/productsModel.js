@@ -105,7 +105,25 @@ export const searchProducts = async(search, page, limit) =>{
     LIMIT ? OFFSET ?`,
     [searchTerm, searchTerm, searchTerm, limit, offset]
     )
-    return rows
+    const [count] = await db.query(
+        `SELECT COUNT(*) as total
+        FROM productos p
+        INNER JOIN categorias c 
+        ON p.categoria_id = c.categoria_id
+        WHERE (
+          p.nombre LIKE ?
+          OR p.descripcion LIKE ?
+          OR c.nombre LIKE ?
+        )`,
+        [searchTerm, searchTerm, searchTerm]
+        )
+
+        const total = count[0].total
+        const totalPages = Math.ceil(total / limit)
+            return {
+          data: rows,
+          totalPages
+        }
 }
 
 
