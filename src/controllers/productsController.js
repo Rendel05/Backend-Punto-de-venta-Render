@@ -208,26 +208,36 @@ export const editProduct = async (req, res) => {
 }
 
 
-export const removeProduct = async (req, res) => {
+export const changeProductStatus = async (req, res) => {
 
-  try {
+try {
+        const { id } = req.params
+        const { activo } = req.body
 
-    const { id } = req.params
+        if (activo !== 0 && activo !== 1) {
+          return res.status(400).json({
+              message: 'Estado inválido'
+          });
+      }
 
-    const result = await deleteProduct(id)
+        const affectedRows = await updateProductStatus(id, activo);
 
-    if (result > 0) {
-      res.json({ message: "Producto eliminado correctamente" })
-    } else {
-      res.status(404).json({ message: "Producto no encontrado" })
+        if (affectedRows === 0) {
+            return res.status(404).json({
+                message: 'Producto no encontrado'
+            })
+        }
+
+        res.json({
+            message: 'Estado actualizado correctamente'
+        })
+
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({
+            message: 'Error en el servidor'
+        })
     }
-
-  } catch (error) {
-
-    res.status(500).json({ message: "Error al eliminar producto" })
-
-  }
-
 }
 
 

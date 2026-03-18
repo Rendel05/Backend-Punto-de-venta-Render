@@ -6,7 +6,7 @@ import {
   getProduct,
   createProduct,
   editProduct,
-  removeProduct,
+  changeProductStatus,
   searchProduct
 } from '../controllers/productsController.js'
 import upload from '../middlewares/upload.js'
@@ -31,6 +31,6 @@ router.get('/products/:id', getProduct)
 
 router.post('/products', verifyToken, createProduct)
 router.put('/products/:id', verifyToken, editProduct)
-router.delete('/products/:id', verifyToken, removeProduct)
+router.put('/products/:id/status', verifyToken,changeProductStatus);
 
 export default router

@@ -20,6 +20,26 @@ export const getAllProducts = async (page, limit) => {
   }
 }
 
+export const getAllActiveProducts = async (page,limit) =>{
+  const offset = (page - 1) * limit
+
+  const [rows] = await db.query(
+    "SELECT * FROM productos WHERE activo =1 LIMIT ? OFFSET ?",
+    [limit, offset]
+  )
+
+  const [[{ total }]] = await db.query(
+    "SELECT COUNT(*) as total FROM productos WHERE activo = 1"
+  )
+
+  return {
+    data: rows,
+    total,
+    page,
+    totalPages: Math.ceil(total / limit)
+  }
+}
+
 export const getProductByCategory  = async(page, limit, category) => {
     const offset = (page - 1) * limit
     const [rows] = await db.query(
@@ -79,13 +99,15 @@ export const updateProduct = async(id,name,code,description,buy_price,sell_price
     return result.affectedRows
 }
 
-export const deleteProduct = async(id) => {
+export const updateProductStatus = async (id, estado) => {
     const [result] = await db.query(
-        `UPDATE productos SET activo = 0 WHERE producto_id = ?`,
-        [id]
-    )
-    return result.affectedRows
-}
+        `UPDATE productos SET activo = ? WHERE producto_id = ?`,
+        [estado, id]
+    );
+
+    return result.affectedRows;
+};
+
 
 export const searchProducts = async(search, page, limit) =>{
     const searchTerm = `%${search}%`
