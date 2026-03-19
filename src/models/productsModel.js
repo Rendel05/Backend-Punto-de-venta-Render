@@ -43,12 +43,12 @@ export const getAllActiveProducts = async (page,limit) =>{
 export const getProductByCategory  = async(page, limit, category) => {
     const offset = (page - 1) * limit
     const [rows] = await db.query(
-    "SELECT * FROM productos WHERE categoria_id = ? LIMIT ? OFFSET ?",
+    "SELECT * FROM productos WHERE categoria_id = ? AND activo = 1 LIMIT ? OFFSET ?",
     [category, limit, offset]
   )
 
   const [[{ total }]] = await db.query(
-    "SELECT COUNT(*) as total FROM productos WHERE categoria_id = ?",[category]
+    "SELECT COUNT(*) as total FROM productos WHERE categoria_id = ? AND activo = 1",[category]
   )
 
   return {
@@ -61,7 +61,7 @@ export const getProductByCategory  = async(page, limit, category) => {
 
 export const getProductById = async(id) => {
     const [rows] = await db.query(
-        "SELECT * FROM productos WHERE producto_id = ?",[id]
+        "SELECT * FROM productos WHERE producto_id = ? AND activo = 1",[id]
     )
     return rows[0]
 }
@@ -123,6 +123,7 @@ export const searchProducts = async(search, page, limit) =>{
         OR p.descripcion LIKE ?
         OR c.nombre LIKE ?
     )
+    AND p.activo = 1
     ORDER BY p.nombre ASC
     LIMIT ? OFFSET ?`,
     [searchTerm, searchTerm, searchTerm, limit, offset]
@@ -136,7 +137,8 @@ export const searchProducts = async(search, page, limit) =>{
           p.nombre LIKE ?
           OR p.descripcion LIKE ?
           OR c.nombre LIKE ?
-        )`,
+        )
+        AND p.activo = 1`,
         [searchTerm, searchTerm, searchTerm]
         )
 

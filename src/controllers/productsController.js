@@ -1,5 +1,6 @@
 import {
   getAllProducts,
+  getAllActiveProducts,
   getProductByCategory,
   getPopularProducts,
   getProductById,
@@ -29,6 +30,26 @@ export const getProducts = async (req, res) => {
   }
 
 }
+
+export const getActiveProducts = async (req, res) => {
+
+  try {
+
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 10
+
+    const products = await getAllActiveProducts(page, limit)
+
+    res.json(products)
+
+  } catch (error) {
+
+    res.status(500).json({ message: "Error al obtener productos" })
+
+  }
+
+}
+
 
 export const getPopularProductsC = async (req, res) => {
 

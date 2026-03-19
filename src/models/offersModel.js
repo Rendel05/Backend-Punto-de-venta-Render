@@ -3,7 +3,7 @@ import db from '../config/db.js'
 export const getAllOffers = async(page=1 ,limit=10 ) =>{
     const offset = (page - 1) * limit
     const [rows] = await db.query(
-    "SELECT * FROM ofertas LIMIT ? OFFSET ?",
+    "SELECT o.*,p.nombre FROM ofertas o INNER JOIN productos p ON o.producto_id = p.producto_id LIMIT ? OFFSET ?",
     [limit, offset]
   )
 

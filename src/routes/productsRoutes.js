@@ -1,6 +1,7 @@
 import express from 'express'
 import {
   getProducts,
+  getActiveProducts,
   getProductsByCategory,
   getPopularProductsC,
   getProduct,
@@ -23,7 +24,8 @@ router.post(
   uploadToCloudinary,
   createProduct
 )
-router.get('/products', getProducts)
+router.get('/products',verifyToken, getProducts)
+router.get('/products/active', getActiveProducts)
 router.get('/products/search', searchProduct)
 router.get('/products/popular', getPopularProductsC)
 router.get('/products/category/:id', getProductsByCategory)

@@ -10,8 +10,8 @@ import { verifyToken } from '../middlewares/authMiddleware.js'
 
 const router = express.Router()
 
-router.get('/users', getUsers)
-router.get('/users/:id', getUser)
+router.get('/users', verifyToken, getUsers)
+router.get('/users/:id', verifyToken, getUser)
 router.post('/users', verifyToken, createUser)
 router.put('/users/:id', verifyToken, editUser)
 router.put('/users/:id/status', verifyToken, changeStatus)
