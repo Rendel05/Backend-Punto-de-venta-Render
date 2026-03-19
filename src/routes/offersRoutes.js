@@ -3,6 +3,7 @@ import {
   getOffers,
   getActiveOffersController,
   updateOfferController,
+  changeStatus,
   createOffer
 } from '../controllers/offersController.js'
 import { verifyToken } from '../middlewares/authMiddleware.js'
@@ -14,6 +15,7 @@ router.get("/offers/active", getActiveOffersController);
 
 router.post('/offers', verifyToken, createOffer)
 router.put("/:id", verifyToken,updateOfferController);
+router.put('/offers/:id/status', verifyToken, changeStatus);
 
 
 export default router

@@ -19,6 +19,15 @@ export const getAllOffers = async(page=1 ,limit=10 ) =>{
   }
 }     
 
+export const updateOfferStatus = async (id, estado) => {
+  const [result] = await db.query(
+    `UPDATE ofertas SET activo = ? WHERE oferta_id = ?`,
+    [estado, id]
+  );
+
+  return result.affectedRows;
+};
+
 export const addNewOffer = async (product_id,offer_price,start_date,end_date) =>{
     const [result] = await db.query(
         `INSERT INTO ofertas (producto_id,precio_oferta, fecha_inicio, fecha_fin, activo) VALUES (?,?,?,?,1)`
