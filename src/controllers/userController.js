@@ -2,7 +2,7 @@ import {
   getAllUsers,
   addNewUser,
   getUserById,
-  deleteUser,
+  updateUserStatus,
   updateUser
 } from '../models/userModel.js'
 
@@ -66,25 +66,36 @@ export const getUser = async (req, res) => {
 }
 
 
-export const removeUser = async (req, res) => {
+export const changeStatus = async (req, res) => {
 
   try {
 
     const { id } = req.params
-
-    const result = await deleteUser(id)
-
-    if (result > 0) {
-      res.json({ message: "Usuario desactivado correctamente" })
-    } else {
-      res.status(404).json({ message: "Usuario no encontrado" })
+    const {activo} = req.body
+     
+    if (activo !== 0 && activo !== 1) {
+          return res.status(400).json({
+              message: 'Estado inválido'
+          });
     }
+        const affectedRows = await updateUserStatus(id, activo);
 
-  } catch (error) {
+        if (affectedRows === 0) {
+            return res.status(404).json({
+                message: 'Usuario no encontrado'
+            })
+        }
 
-    res.status(500).json({ message: "Error al eliminar usuario" })
+        res.json({
+            message: 'Estado actualizado correctamente'
+        })
 
-  }
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({
+            message: 'Error en el servidor'
+        })
+    }
 }
 
 

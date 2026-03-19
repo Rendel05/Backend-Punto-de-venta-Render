@@ -19,13 +19,14 @@ export const getUserById = async (id) => {
     return rows[0]
 }
 
-export const deleteUser = async (id) => {
-  const [result] = await db.query(
-    "UPDATE usuarios SET activo = 0 WHERE usuario_id = ?",
-    [id]
-  )
-  return result.affectedRows
-}
+export const updateUserStatus = async (id, estado) => {
+    const [result] = await db.query(
+        `UPDATE usuarios SET activo = ? WHERE usuario_id = ?`,
+        [estado, id]
+    );
+
+    return result.affectedRows;
+};
 
 export const updateUser = async (nickname, password, role, status, id) => {
 

@@ -3,7 +3,7 @@ import {
   getUsers,
   createUser,
   getUser,
-  removeUser,
+  changeStatus,
   editUser
 } from '../controllers/userController.js'
 import { verifyToken } from '../middlewares/authMiddleware.js'
@@ -14,6 +14,6 @@ router.get('/users', getUsers)
 router.get('/users/:id', getUser)
 router.post('/users', verifyToken, createUser)
 router.put('/users/:id', verifyToken, editUser)
-router.delete('/users/:id', verifyToken, removeUser)
+router.put('/users/:id/status', verifyToken, changeStatus)
 
 export default router
