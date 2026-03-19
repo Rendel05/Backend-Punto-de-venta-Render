@@ -2,6 +2,7 @@ import express from 'express'
 import cors from "cors"
 
 import suppliersRoutes from './src/routes/suppliersRoutes.js'
+import reviewsRoutes from './src/routes/reviewsRoutes.js'
 import categoriesRoutes from './src/routes/categoriesRoutes.js'
 import authRoutes from './src/routes/authRoutes.js'
 import userRoutes from './src/routes/userRoutes.js'
@@ -18,6 +19,7 @@ app.use(express.json())
 app.use(cors())
 
 app.use('/api', suppliersRoutes)
+app.use('/api', reviewsRoutes)
 app.use('/api', categoriesRoutes)
 app.use('/api', authRoutes)
 app.use('/api', userRoutes)
