@@ -5,7 +5,7 @@ import {
   getProductById,
   addProduct,
   updateProduct,
-  deleteProduct,
+  updateProductStatus,
   searchProducts
 } from '../models/productsModel.js'
 import cloudinary from '../config/cloudinary.js'
