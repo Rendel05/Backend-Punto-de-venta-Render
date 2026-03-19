@@ -53,6 +53,7 @@ export const getActiveOffers = async () => {
         ON o.producto_id = p.producto_id
     WHERE 
         o.activo = 1
+        AND p.activo = 1
         AND CURDATE() BETWEEN o.fecha_inicio AND o.fecha_fin
     ORDER BY o.fecha_fin ASC
     LIMIT 20

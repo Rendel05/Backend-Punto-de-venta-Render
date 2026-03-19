@@ -23,7 +23,16 @@ router.post(
   upload.single('image'),
   uploadToCloudinary,
   createProduct
-)
+);
+
+router.put(
+  '/products/:id',
+  verifyToken,
+  upload.single('image'),
+  uploadToCloudinary,
+  editProduct
+);
+
 router.get('/products',verifyToken, getProducts)
 router.get('/products/active', getActiveProducts)
 router.get('/products/search', searchProduct)

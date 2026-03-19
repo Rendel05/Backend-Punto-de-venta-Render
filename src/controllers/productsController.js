@@ -151,7 +151,8 @@ export const createProduct = async (req, res) => {
     }
 
   } catch (error) {
-
+  console.error(error)
+  
   if (req.image_public_id) {
     try {
       await cloudinary.uploader.destroy(req.image_public_id)
