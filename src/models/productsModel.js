@@ -61,7 +61,7 @@ export const getProductByCategory  = async(page, limit, category) => {
 
 export const getProductById = async(id) => {
     const [rows] = await db.query(
-        "SELECT * FROM productos WHERE producto_id = ? AND activo = 1",[id]
+        "SELECT p.*,c.nombre AS categoria_nombre FROM productos p INNER JOIN categorias c ON p.categoria_id = c.categoria_id WHERE producto_id = ? AND activo = 1",[id]
     )
     return rows[0]
 }
