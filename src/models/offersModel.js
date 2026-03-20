@@ -47,7 +47,7 @@ export const getActiveOffers = async () => {
         o.fecha_fin,
         p.nombre,
         p.precio_venta,
-        p.ImagenText
+        p.imagen_url
     FROM ofertas o
     INNER JOIN productos p 
         ON o.producto_id = p.producto_id

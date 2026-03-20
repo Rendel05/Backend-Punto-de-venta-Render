@@ -24,7 +24,7 @@ export const getAllActiveProducts = async (page,limit) =>{
   const offset = (page - 1) * limit
 
   const [rows] = await db.query(
-    "SELECT * FROM productos WHERE activo =1 LIMIT ? OFFSET ?",
+    "SELECT p.*,c.nombre AS categoria_nombre FROM productos p INNER JOIN categorias c ON p.categoria_id = c.categoria_id WHERE activo =1 LIMIT ? OFFSET ?",
     [limit, offset]
   )
 
