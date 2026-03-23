@@ -2,7 +2,7 @@ import db from '../config/db.js'
 
 export const getAllReviews = async(id) => {
     const [rows] = await db.query (`
-        SELECT r.*, CONCAT(c.nombre, ' ', c.apellido)AS usuario FROM resenas r INNER JOIN clientes c ON r.cliente_id = c.cliente_id  WHERE producto_id = ?  ORDER BY r.fecha DESC
+        SELECT r.*, CONCAT(c.nombre, ' ', c.apellido)AS usuario FROM resenas r INNER JOIN clientes c ON r.cliente_id = c.usuario_id  WHERE producto_id = ?  ORDER BY r.fecha DESC
     `,[id])
     
     const [[{ total }]] = await db.query(

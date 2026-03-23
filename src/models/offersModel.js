@@ -65,6 +65,13 @@ export const getActiveOffers = async () => {
 
 }
 
+export const getOfferById = async (offer_id) => {
+  const [rows] = await db.query(
+    `SELECT * FROM ofertas WHERE oferta_id = ?`,[offer_id]
+  );
+  return rows[0];
+}
+
 export const updateOffer = async (
   offer_id,
   product_id,

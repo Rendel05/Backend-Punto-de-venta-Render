@@ -3,7 +3,8 @@ import {
   addNewOffer,
   getActiveOffers,
   updateOfferStatus,
-  updateOffer
+  updateOffer,
+  getOfferById
 } from '../models/offersModel.js'
 
 
@@ -24,6 +25,17 @@ export const getOffers = async (req, res) => {
 
   }
 
+}
+
+export const getOffer = async (req,res) => {
+  const {id} = req.params;
+  try{
+    const offer = await getOfferById(id)
+    res.json(offer)
+  }
+  catch{
+    res.status(500).json({message:"Error al obtener oferta"})
+  }
 }
 
 export const changeStatus = async (req, res) => {
