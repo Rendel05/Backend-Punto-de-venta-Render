@@ -3,7 +3,9 @@ import {
   addNewCustomer,
   updateCustomerPassword,
   updateCustomerInfo,
-  deleteCustomer
+  deleteCustomer,
+  checkAliasExists,
+  checkEmailExists
 } from '../models/customerModel.js'
 
 
@@ -16,14 +18,15 @@ export const getCustomer = async (req, res) => {
     const customer = await getCustomerInfo(id)
 
     if (!customer) {
-      return res.status(404).json({ message: "Cliente no encontrado" })
+      return res.status(404).json({ message: 'Cliente no encontrado' })
     }
 
     res.json(customer)
 
   } catch (error) {
 
-    res.status(500).json({ message: "Error obteniendo cliente" })
+    console.error(error)
+    res.status(500).json({ message: 'Error obteniendo cliente' })
 
   }
 
@@ -45,6 +48,30 @@ export const createCustomer = async (req, res) => {
       birth_date
     } = req.body
 
+
+    if (!nickname || !password || !name || !e_mail) {
+      return res.status(400).json({ message: 'Faltan campos obligatorios (nickname, password, name, e_mail)' })
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(e_mail)) {
+      return res.status(400).json({ message: 'Formato de email inválido' })
+    }
+
+    if (phone && !/^\d+$/.test(phone)) {
+      return res.status(400).json({ message: 'Teléfono inválido, solo números' })
+    }
+
+    const aliasUsed = await checkAliasExists(nickname)
+    if (aliasUsed) {
+      return res.status(409).json({ message: 'El alias ya está en uso' })
+    }
+
+    const emailUsed = await checkEmailExists(e_mail)
+    if (emailUsed) {
+      return res.status(409).json({ message: 'El email ya está registrado' })
+    }
+
     const user_id = await addNewCustomer(
       nickname,
       password,
@@ -57,13 +84,15 @@ export const createCustomer = async (req, res) => {
     )
 
     res.status(201).json({
-      message: "Cliente creado correctamente",
-      user_id
+      message: 'Cliente registrado correctamente',
+      user_id,
+      rol: 'Cliente'
     })
 
   } catch (error) {
 
-    res.status(500).json({ message: "Error creando cliente" })
+    console.error(error)
+    res.status(500).json({ message: 'Error creando cliente' })
 
   }
 
@@ -86,6 +115,15 @@ export const editCustomer = async (req, res) => {
       birth_date
     } = req.body
 
+    if (!nickname || !e_mail) {
+      return res.status(400).json({ message: 'Faltan datos obligatorios (nickname, e_mail)' })
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(e_mail)) {
+      return res.status(400).json({ message: 'Formato de email inválido' })
+    }
+
     const result = await updateCustomerInfo(
       nickname,
       name,
@@ -98,14 +136,15 @@ export const editCustomer = async (req, res) => {
     )
 
     if (result > 0) {
-      res.json({ message: "Cliente actualizado correctamente" })
+      res.json({ message: 'Cliente actualizado correctamente' })
     } else {
-      res.status(404).json({ message: "Cliente no encontrado" })
+      res.status(404).json({ message: 'Cliente no encontrado' })
     }
 
   } catch (error) {
 
-    res.status(500).json({ message: "Error actualizando cliente" })
+    console.error(error)
+    res.status(500).json({ message: 'Error actualizando cliente' })
 
   }
 
@@ -119,17 +158,22 @@ export const changeCustomerPassword = async (req, res) => {
     const { id } = req.params
     const { password } = req.body
 
+    if (!password) {
+      return res.status(400).json({ message: 'La nueva contraseña es obligatoria' })
+    }
+
     const result = await updateCustomerPassword(id, password)
 
     if (result > 0) {
-      res.json({ message: "Contraseña actualizada correctamente" })
+      res.json({ message: 'Contraseña actualizada correctamente' })
     } else {
-      res.status(404).json({ message: "Cliente no encontrado" })
+      res.status(404).json({ message: 'Cliente no encontrado' })
     }
 
   } catch (error) {
 
-    res.status(500).json({ message: "Error actualizando contraseña" })
+    console.error(error)
+    res.status(500).json({ message: 'Error actualizando contraseña' })
 
   }
 
@@ -145,14 +189,15 @@ export const removeCustomer = async (req, res) => {
     const result = await deleteCustomer(id)
 
     if (result > 0) {
-      res.json({ message: "Cliente eliminado correctamente" })
+      res.json({ message: 'Cliente eliminado correctamente' })
     } else {
-      res.status(404).json({ message: "Cliente no encontrado" })
+      res.status(404).json({ message: 'Cliente no encontrado' })
     }
 
   } catch (error) {
 
-    res.status(500).json({ message: "Error eliminando cliente" })
+    console.error(error)
+    res.status(500).json({ message: 'Error eliminando cliente' })
 
   }
 

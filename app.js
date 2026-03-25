@@ -9,9 +9,9 @@ import userRoutes from './src/routes/userRoutes.js'
 import productsRoutes from './src/routes/productsRoutes.js'
 import offersRoutes from './src/routes/offersRoutes.js'
 import pagesRoutes from './src/routes/editablePagesRoutes.js'
-import customersRoutes from './src/routes/customersRoutes.js'
 import cashierRoutes from './src/routes/cashierRoutes.js'
 import cashOutRoutes from './src/routes/cashOutRoutes.js'
+import customersRoutes from './src/routes/customersRoutes.js'
 
 const app = express()
 
@@ -27,8 +27,8 @@ app.use('/api', userRoutes)
 app.use('/api', productsRoutes)
 app.use('/api', offersRoutes)
 app.use('/api', pagesRoutes)
-app.use('/api', customersRoutes)
 app.use('/api', cashierRoutes)
 app.use('/api',cashOutRoutes)
+app.use('/api',customersRoutes)
 
 export default app
