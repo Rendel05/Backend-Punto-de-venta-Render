@@ -28,12 +28,16 @@ export const updateOfferStatus = async (id, estado) => {
   return result.affectedRows;
 };
 
-export const addNewOffer = async (product_id,offer_price,start_date,end_date) =>{
+export const addNewOffer = async (product_id, offer_price, start_date, end_date) => {
+  try {
     const [result] = await db.query(
-        `INSERT INTO ofertas (producto_id,precio_oferta, fecha_inicio, fecha_fin, activo) VALUES (?,?,?,?,1)`
-        ,[product_id,offer_price,start_date,end_date]
-    )
-    return result.affectedRows
+      `INSERT INTO ofertas (producto_id, precio_oferta, fecha_inicio, fecha_fin, activo) VALUES (?,?,?,?,1)`,
+      [product_id, offer_price, start_date, end_date]
+    );
+    return { success: true, affectedRows: result.affectedRows };
+  } catch (error) {
+    return { success: false, message: error.sqlMessage || 'Error desconocido' };
+  }
 }
 
 export const getActiveOffers = async () => {
@@ -72,27 +76,21 @@ export const getOfferById = async (offer_id) => {
   return rows[0];
 }
 
-export const updateOffer = async (
-  offer_id,
-  product_id,
-  offer_price,
-  start_date,
-  end_date,
-  active
-) => {
-
-  const [result] = await db.query(
-    `UPDATE ofertas 
-     SET producto_id = ?, 
-         precio_oferta = ?, 
-         fecha_inicio = ?, 
-         fecha_fin = ?, 
-         activo = ?
-     WHERE oferta_id = ?`,
-    [product_id, offer_price, start_date, end_date, active, offer_id]
-  );
-
-  return result.affectedRows;
-
+export const updateOffer = async (offer_id, product_id, offer_price, start_date, end_date, active) => {
+  try {
+    const [result] = await db.query(
+      `UPDATE ofertas 
+       SET producto_id = ?, 
+           precio_oferta = ?, 
+           fecha_inicio = ?, 
+           fecha_fin = ?, 
+           activo = ?
+       WHERE oferta_id = ?`,
+      [product_id, offer_price, start_date, end_date, active, offer_id]
+    );
+    return { success: true, affectedRows: result.affectedRows };
+  } catch (error) {
+    return { success: false, message: error.sqlMessage || 'Error desconocido' };
+  }
 }
 
