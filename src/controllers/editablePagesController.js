@@ -49,14 +49,12 @@ export const createContent = async (req, res) => {
 
     const {
       page_id,
-      content,
-      order
+      content
     } = req.body
 
     const result = await createNewContent(
       page_id,
-      content,
-      order
+      content
     )
 
     if (result > 0) {

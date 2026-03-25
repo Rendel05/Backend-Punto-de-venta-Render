@@ -9,7 +9,7 @@
 
     export const getContentPages = async (page_id) =>{
         const [rows] = await db.query (
-            `SELECT * from pagina_contenidos WHERE pagina_id = ? ORDER BY orden DESC`,[page_id]
+            `SELECT * from pagina_contenidos WHERE pagina_id = ? ORDER BY orden ASC`,[page_id]
         )
         return rows
     }
@@ -21,11 +21,12 @@
         return result.affectedRows
     }
 
-    export const createNewContent = async (page_id,content,order) =>{
+    export const createNewContent = async (page_id,content) =>{
         const [result] = await db.query(
-            `INSERT INTO pagina_contenidos(pagina_id, contenido, orden) VALUES (?,?,?)`,
-             [page_id,content,order]
+            `INSERT INTO pagina_contenidos(pagina_id, contenido, orden) VALUES (?,?,next_block_order(?))`,
+             [page_id,content,page_id]
         )
+    return result.affectedRows
     }
 
     export const deleteContent = async (id) => {
