@@ -7,6 +7,7 @@ import {
   checkAliasExists,
   checkEmailExists
 } from '../models/customerModel.js'
+import db from '../config/db.js'
 
 
 export const getCustomer = async (req, res) => {
@@ -34,45 +35,43 @@ export const getCustomer = async (req, res) => {
 
 
 export const createCustomer = async (req, res) => {
+  const conn = await db.getConnection()
 
   try {
-
-    const {
-      nickname,
-      password,
-      name,
-      last_name,
-      e_mail,
-      phone,
-      address,
-      birth_date
-    } = req.body
-
+    const { nickname, password, name, last_name, e_mail, phone, address, birth_date } = req.body
 
     if (!nickname || !password || !name || !e_mail) {
+      conn.release()
       return res.status(400).json({ message: 'Faltan campos obligatorios (nickname, password, name, e_mail)' })
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(e_mail)) {
+      conn.release()
       return res.status(400).json({ message: 'Formato de email inválido' })
     }
 
     if (phone && !/^\d+$/.test(phone)) {
+      conn.release()
       return res.status(400).json({ message: 'Teléfono inválido, solo números' })
     }
 
     const aliasUsed = await checkAliasExists(nickname)
     if (aliasUsed) {
+      conn.release()
       return res.status(409).json({ message: 'El alias ya está en uso' })
     }
 
     const emailUsed = await checkEmailExists(e_mail)
     if (emailUsed) {
+      conn.release()
       return res.status(409).json({ message: 'El email ya está registrado' })
     }
 
+    await conn.beginTransaction()
+
     const user_id = await addNewCustomer(
+      conn,
       nickname,
       password,
       name,
@@ -83,6 +82,8 @@ export const createCustomer = async (req, res) => {
       birth_date
     )
 
+    await conn.commit()
+
     res.status(201).json({
       message: 'Cliente registrado correctamente',
       user_id,
@@ -90,12 +91,12 @@ export const createCustomer = async (req, res) => {
     })
 
   } catch (error) {
-
+    await conn.rollback()
     console.error(error)
     res.status(500).json({ message: 'Error creando cliente' })
-
+  } finally {
+    conn.release()
   }
-
 }
 
 

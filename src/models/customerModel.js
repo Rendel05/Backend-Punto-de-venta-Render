@@ -37,18 +37,30 @@ export const checkEmailExists = async (email) => {
   return rows.length > 0
 }
 
-export const addNewCustomer = async (nickname, password, name, last_name, e_mail, phone, address, birth_date) => {
+export const addNewCustomer = async (
+  conn,
+  nickname,
+  password,
+  name,
+  last_name,
+  e_mail,
+  phone,
+  address,
+  birth_date
+) => {
   const hashedPassword = await bcrypt.hash(password, 10)
 
-  const [userResult] = await db.query(
-    `INSERT INTO usuarios (alias, password_hash, rol, activo) VALUES (?, ?, 'Cliente', 1)`,
+  const [userResult] = await conn.query(
+    `INSERT INTO usuarios (alias, password_hash, rol, activo)
+     VALUES (?, ?, 'Cliente', 1)`,
     [nickname, hashedPassword]
   )
 
   const usuario_id = userResult.insertId
 
-  await db.query(
-    `INSERT INTO clientes (usuario_id, nombre, apellido, telefono, email, direccion, fecha_nacimiento, fecha_registro)
+  await conn.query(
+    `INSERT INTO clientes 
+     (usuario_id, nombre, apellido, telefono, email, direccion, fecha_nacimiento, fecha_registro)
      VALUES (?, ?, ?, ?, ?, ?, ?, NOW())`,
     [usuario_id, name, last_name, phone, e_mail, address, birth_date || null]
   )
