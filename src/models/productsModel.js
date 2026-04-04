@@ -63,7 +63,7 @@ export const getProductById = async (id) => {
      WHERE producto_id = ? AND activo = 1`,
     [id]
   )
-  return rows
+  return rows[0];
 }
 
 export const searchProducts = async (search, page, limit) => {
