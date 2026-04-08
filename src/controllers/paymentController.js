@@ -102,7 +102,7 @@ export const createPreference = async (req, res) => {
           pending: "https://tiendaoly.grupoahost.com/pages/pending.html"
         },
 
-        notification_url: "https://backend-punto-de-venta-render.onrender.com/api/webhook",
+        notification_url: "https://backend-punto-de-venta-render.onrender.com/api/webhook/mercadopago",
 
         auto_return: "approved"
       }
