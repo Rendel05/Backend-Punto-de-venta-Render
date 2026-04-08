@@ -51,10 +51,17 @@ export const createPreference = async (req, res) => {
 
     await connection.beginTransaction();
 
+    const [id_cliente] = await connection.query(
+      `SELECT cliente_id FROM clientes WHERE usuario_id=?`,[req.user.id]
+    )
+    if (id_cliente.length === 0) {
+       return res.status(404).json({ error: "Cliente no encontrado" })
+    }
+
     const [ventaResult] = await connection.query(
       `INSERT INTO ventas_online (cliente_id, total, estado)
        VALUES (?, ?, ?)`,
-      [req.user.id, total, "pendiente"]
+      [id_cliente[0].cliente_id , total, "pendiente"]
     );
 
     const ventaId = ventaResult.insertId;
