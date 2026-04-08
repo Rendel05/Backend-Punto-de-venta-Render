@@ -6,6 +6,7 @@ const client = new MercadoPagoConfig({
 });
 
 export const mpWebhook = async (req, res) => {
+  console.log("🔥 Webhook recibido:", req.body);
   const connection = await db.getConnection();
 
   try {

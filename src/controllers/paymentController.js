@@ -95,11 +95,15 @@ export const createPreference = async (req, res) => {
       body: {
         items,
         external_reference: String(ventaId),
+
         back_urls: {
           success: "https://tiendaoly.grupoahost.com/pages/success.html",
           failure: "https://tiendaoly.grupoahost.com/pages/failure.html",
           pending: "https://tiendaoly.grupoahost.com/pages/pending.html"
         },
+
+        notification_url: "https://backend-punto-de-venta-render.onrender.com/api/webhook",
+
         auto_return: "approved"
       }
     });
