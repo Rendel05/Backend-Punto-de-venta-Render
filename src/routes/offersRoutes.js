@@ -7,17 +7,17 @@ import {
   createOffer,
   getOffer
 } from '../controllers/offersController.js'
-import { verifyToken } from '../middlewares/authMiddleware.js'
+import { verifyToken,authorizeRoles } from '../middlewares/authMiddleware.js'
 
 const router = express.Router()
 
-router.get('/offers',verifyToken, getOffers)
+router.get('/offers',verifyToken,authorizeRoles('Admin'), getOffers)
 router.get("/offers/active", getActiveOffersController);
 
-router.get('/offers/:id',verifyToken,getOffer)
-router.post('/offers', verifyToken, createOffer)
-router.put("/offers/:id", verifyToken,updateOfferController);
-router.put('/offers/:id/status', verifyToken, changeStatus);
+router.get('/offers/:id',verifyToken,authorizeRoles('Admin'),getOffer)
+router.post('/offers', verifyToken,authorizeRoles('Admin'), createOffer)
+router.put("/offers/:id",verifyToken,authorizeRoles('Admin'),updateOfferController);
+router.put('/offers/:id/status',verifyToken,authorizeRoles('Admin'), changeStatus);
 
 
 export default router

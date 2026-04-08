@@ -1,12 +1,12 @@
 import express from 'express'
 import { createCashCut,getTransactions } from "../controllers/cashOutController.js";
-import { verifyToken } from "../middlewares/authMiddleware.js";
+import { verifyToken,authorizeRoles } from "../middlewares/authMiddleware.js";
 
 
 const router = express.Router()
 
 
-router.post('/cashOut',verifyToken,createCashCut)
-router.get('/cashOut',verifyToken,getTransactions)
+router.post('/cashOut',verifyToken,authorizeRoles('Admin'),createCashCut)
+router.get('/cashOut',verifyToken,authorizeRoles('Admin'),getTransactions)
 
 export default router

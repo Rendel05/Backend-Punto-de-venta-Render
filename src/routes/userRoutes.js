@@ -6,14 +6,14 @@ import {
   changeStatus,
   editUser
 } from '../controllers/userController.js'
-import { verifyToken } from '../middlewares/authMiddleware.js'
+import { verifyToken,authorizeRoles } from '../middlewares/authMiddleware.js'
 
 const router = express.Router()
 
-router.get('/users', verifyToken, getUsers)
-router.get('/users/:id', verifyToken, getUser)
-router.post('/users', verifyToken, createUser)
-router.put('/users/:id', verifyToken, editUser)
-router.put('/users/:id/status', verifyToken, changeStatus)
+router.get('/users',verifyToken,authorizeRoles('Admin'), getUsers)
+router.get('/users/:id',verifyToken,authorizeRoles('Admin'), getUser)
+router.post('/users',verifyToken,authorizeRoles('Admin'), createUser)
+router.put('/users/:id',verifyToken,authorizeRoles('Admin'), editUser)
+router.put('/users/:id/status',verifyToken,authorizeRoles('Admin'), changeStatus)
 
 export default router

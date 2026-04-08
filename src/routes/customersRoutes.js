@@ -7,15 +7,15 @@ import {
   changeCustomerPassword,
   removeCustomer
 } from '../controllers/customersController.js'
-import { verifyToken } from '../middlewares/authMiddleware.js'
+import { verifyToken,authorizeRoles } from '../middlewares/authMiddleware.js'
 
 const router = express.Router()
 
 router.post('/customers', createCustomer)
 
-router.get('/customers/:id', verifyToken, getCustomer)
-router.put('/customers/:id', verifyToken, editCustomer)
-router.put('/customers/:id/password', verifyToken, changeCustomerPassword)
-router.delete('/customers/:id', verifyToken, removeCustomer)
+router.get('/customers/:id',verifyToken,authorizeRoles('Cliente'), getCustomer)
+router.put('/customers/:id',verifyToken,authorizeRoles('Cliente'), editCustomer)
+router.put('/customers/:id/password',verifyToken,authorizeRoles('Cliente'), changeCustomerPassword)
+router.delete('/customers/:id',verifyToken,authorizeRoles('Cliente'), removeCustomer)
 
 export default router
