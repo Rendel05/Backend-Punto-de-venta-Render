@@ -19,7 +19,7 @@ export const createPreference = async (req, res) => {
     const ids = carrito.map(p => p.producto_id);
 
     const [productosDB] = await connection.query(
-      "SELECT producto_id, nombre, precio_final, stock FROM vw_productos_con_ofertas WHERE producto_id IN (?)",
+      "SELECT producto_id, nombre, precio_final, stock FROM vw_productos_con_oferta WHERE producto_id IN (?)",
       [ids]
     );
 
