@@ -1,4 +1,4 @@
-import { getOrders, getOrderById } from '../models/ordersModel.js';
+import { getOrders, getDetailOrders } from '../models/ordersModel.js';
 
 export const getUserOrders = async (req, res) => {
   try {
@@ -34,7 +34,7 @@ export const getUserOrderById = async (req, res) => {
     const user_id = req.user.id;
     const { id } = req.params;
 
-    const order = await getOrderById(user_id, id);
+    const order = await getDetailOrders(user_id, id);
 
     if (!order) {
       return res.status(404).json({
