@@ -14,6 +14,7 @@ import cashOutRoutes from './src/routes/cashOutRoutes.js'
 import customersRoutes from './src/routes/customersRoutes.js'
 import webhookRoutes from './src/routes/webhookRoutes.js'
 import paymentRoutes from './src/routes/paymentRoutes.js'
+import ordersRoutes from './src/routes/ordersRoutes.js'
 const app = express()
 
 app.use(express.json())
@@ -31,6 +32,7 @@ app.use('/api', pagesRoutes)
 app.use('/api', cashierRoutes)
 app.use('/api',cashOutRoutes)
 app.use('/api',customersRoutes)
+app.use('/api',ordersRoutes)
 app.use('/api/webhook',webhookRoutes)
 app.use('/api/payment',paymentRoutes)
 
