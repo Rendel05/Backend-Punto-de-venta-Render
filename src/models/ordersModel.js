@@ -9,7 +9,7 @@ export const getOrders = async (user_id, order = 'DESC', limit = 10) => {
         SELECT venta_id, total, fecha, estado
         FROM ventas_online v
         INNER JOIN clientes c ON v.cliente_id = c.cliente_id
-        WHERE c.usuario_id = ?
+        WHERE c.usuario_id = ? AND v.estado ='aprobado'
         ORDER BY fecha ${safeOrder}
         LIMIT ?;
         `,
