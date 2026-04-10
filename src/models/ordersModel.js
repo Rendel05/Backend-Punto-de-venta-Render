@@ -53,7 +53,8 @@ export const getDetailOrders = async(user_id,order_id)=>{
     venta.productos.push({
         nombre: row.nombre,
         cantidad: row.cantidad,
-        precio: row.subtotal
+        precio: row.subtotal,
+        imagen_url: row.imagen_url
     })
     })
 
