@@ -28,6 +28,7 @@ export const getDetailOrders = async(user_id,order_id)=>{
         v.referencia_pago,
         dv.cantidad,
         dv.subtotal,
+        p.producto_id,
         p.nombre,
         p.imagen_url
         FROM ventas_online v
@@ -35,7 +36,7 @@ export const getDetailOrders = async(user_id,order_id)=>{
         INNER JOIN detalle_ventas_online dv ON dv.venta_id = v.venta_id
         INNER JOIN productos p ON p.producto_id = dv.producto_id
         WHERE c.usuario_id = ?
-        AND v.venta_id = ?;
+        AND v.venta_id = ? AND v.estado='aprobado';
         `,[user_id,order_id])
 
     const rows = result; 
@@ -51,6 +52,7 @@ export const getDetailOrders = async(user_id,order_id)=>{
     };
     rows.forEach(row => {
     venta.productos.push({
+        id:row.producto_id,
         nombre: row.nombre,
         cantidad: row.cantidad,
         precio: row.subtotal,
