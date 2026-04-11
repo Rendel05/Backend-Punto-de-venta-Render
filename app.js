@@ -36,6 +36,6 @@ app.use('/api',customersRoutes)
 app.use('/api',ordersRoutes)
 app.use('/api/webhook',webhookRoutes)
 app.use('/api/payment',paymentRoutes)
-app.use('/api/payment',predictionRoutes)
+app.use('/api/',predictionRoutes)
 
 export default app
