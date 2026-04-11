@@ -15,6 +15,7 @@ import customersRoutes from './src/routes/customersRoutes.js'
 import webhookRoutes from './src/routes/webhookRoutes.js'
 import paymentRoutes from './src/routes/paymentRoutes.js'
 import ordersRoutes from './src/routes/ordersRoutes.js'
+import predictionRoutes from './src/routes/predictionRoutes.js'
 const app = express()
 
 app.use(express.json())
@@ -35,5 +36,6 @@ app.use('/api',customersRoutes)
 app.use('/api',ordersRoutes)
 app.use('/api/webhook',webhookRoutes)
 app.use('/api/payment',paymentRoutes)
+app.use('/api/payment',predictionRoutes)
 
 export default app
