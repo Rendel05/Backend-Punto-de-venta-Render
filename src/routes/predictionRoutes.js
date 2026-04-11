@@ -1,9 +1,9 @@
 import express from 'express';
-import { getPrediction } from '../controllers/predictionController.js';
-import { verifyToken,authorizeRoles } from '../middlewares/authMiddleware.js';
+import { getSummary, getPrediction } from '../controllers/predictionController.js';
 
 const router = express.Router();
 
-router.post('/prediction',verifyToken, authorizeRoles('Admin'),getPrediction);
+router.get('/prediction/resumen', getSummary);
+router.post('/prediction', getPrediction);
 
 export default router;
