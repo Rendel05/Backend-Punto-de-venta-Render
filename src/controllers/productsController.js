@@ -112,9 +112,7 @@ export const getProduct = async (req, res) => {
 
 
 export const createProduct = async (req, res) => {
-
   try {
-
     const {
       name,
       code,
@@ -125,10 +123,10 @@ export const createProduct = async (req, res) => {
       cat_id,
       supp_id,
       status
-    } = req.body
+    } = req.body;
 
-    const image_url = req.image_url || null
-    const public_id = req.image_public_id || null
+    const image_url = req.image_url || null;
+    const public_id = req.image_public_id || null;
 
     const result = await addProduct(
       name,
@@ -142,36 +140,33 @@ export const createProduct = async (req, res) => {
       status,
       image_url,
       public_id
-    )
+    );
 
-    if (result > 0) {
-      res.status(201).json({ message: "Producto creado correctamente" })
-    } else {
-      res.status(400).json({ message: "No se pudo crear el producto" })
+    if (!result.success) {
+
+      if (public_id) {
+        try {
+          await cloudinary.uploader.destroy(public_id);
+        } catch (e) {
+          console.error("Error eliminando imagen:", e);
+        }
+      }
+
+      return res.status(400).json({ message: result.message });
     }
+
+    res.status(201).json({ message: "Producto creado correctamente" });
 
   } catch (error) {
-  console.error(error)
-  
-  if (req.image_public_id) {
-    try {
-      await cloudinary.uploader.destroy(req.image_public_id)
-    } catch (e) {
-      console.error("Error eliminando imagen:", e)
-    }
+    console.error(error);
+    res.status(500).json({ message: "Error inesperado en el servidor" });
   }
-
-  res.status(500).json({ message: "Error al crear producto" })
-}
-
-}
+};
 
 
 export const editProduct = async (req, res) => {
-
   try {
-
-    const { id } = req.params
+    const { id } = req.params;
 
     const {
       name,
@@ -185,19 +180,18 @@ export const editProduct = async (req, res) => {
       status,
       image_id,
       public_image_id
-    } = req.body
+    } = req.body;
 
-    let image_url = image_id
-    let public_id = public_image_id
+    let image_url = image_id;
+    let public_id = public_image_id;
 
     if (req.image_url) {
-
       if (public_image_id) {
-        await cloudinary.uploader.destroy(public_image_id)
+        await cloudinary.uploader.destroy(public_image_id);
       }
 
-      image_url = req.image_url
-      public_id = req.image_public_id
+      image_url = req.image_url;
+      public_id = req.image_public_id;
     }
 
     const result = await updateProduct(
@@ -213,21 +207,23 @@ export const editProduct = async (req, res) => {
       status,
       image_url,
       public_id
-    )
+    );
 
-    if (result > 0) {
-      res.json({ message: "Producto actualizado correctamente" })
-    } else {
-      res.status(404).json({ message: "Producto no encontrado" })
+    if (!result.success) {
+      return res.status(400).json({ message: result.message });
     }
 
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Producto no encontrado" });
+    }
+
+    res.json({ message: "Producto actualizado correctamente" });
+
   } catch (error) {
-
-    res.status(500).json({ message: "Error al actualizar producto" })
-
+    console.error(error);
+    res.status(500).json({ message: "Error inesperado en el servidor" });
   }
-
-}
+};
 
 
 export const changeProductStatus = async (req, res) => {

@@ -108,24 +108,53 @@ export const getPopularProducts = async () => {
   return rows;
 }
 
-export const addProduct = async (name,code,description,buy_price,sell_price,stock,cat_id,supp_id,status,image_id,public_image_id) => {
+export const addProduct = async (
+  name, code, description, buy_price, sell_price,
+  stock, cat_id, supp_id, status, image_id, public_image_id
+) => {
+  try {
     const [result] = await db.query(
-        `INSERT INTO productos
-        (nombre, codigo, descripcion, precio_compra, precio_venta,
-        stock, categoria_id, proveedor_id, fecha_creacion,
-        activo, imagen_url, imagen_public_id)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURDATE(), ?, ?, ?)`,
-        [name, code, description, buy_price, sell_price, stock, cat_id, supp_id, status, image_id, public_image_id]
+      `INSERT INTO productos
+      (nombre, codigo, descripcion, precio_compra, precio_venta,
+      stock, categoria_id, proveedor_id, fecha_creacion,
+      activo, imagen_url, imagen_public_id)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURDATE(), ?, ?, ?)`,
+      [name, code, description, buy_price, sell_price, stock, cat_id, supp_id, status, image_id, public_image_id]
     )
-    return result.affectedRows
+
+    return { success: true, affectedRows: result.affectedRows };
+
+  } catch (error) {
+    return {
+      success: false,
+      message: error.sqlMessage || 'Error al crear producto'
+    }
+  }
 }
 
-export const updateProduct = async(id,name,code,description,buy_price,sell_price,stock,cat_id,supp_id,status,image_id,public_image_id) => {
+export const updateProduct = async (
+  id, name, code, description, buy_price, sell_price,
+  stock, cat_id, supp_id, status, image_id, public_image_id
+) => {
+  try {
     const [result] = await db.query(
-        `UPDATE productos SET nombre = ?, codigo = ?, descripcion = ?, precio_compra = ?, precio_venta= ?,stock =?,categoria_id = ?,proveedor_id=?,activo=?,imagen_url=?,imagen_public_id=? WHERE producto_id = ?`,
-        [name,code,description,buy_price,sell_price,stock,cat_id,supp_id,status,image_id,public_image_id,id]
+      `UPDATE productos 
+       SET nombre = ?, codigo = ?, descripcion = ?, 
+           precio_compra = ?, precio_venta = ?, stock = ?, 
+           categoria_id = ?, proveedor_id = ?, activo = ?, 
+           imagen_url = ?, imagen_public_id = ?
+       WHERE producto_id = ?`,
+      [name, code, description, buy_price, sell_price, stock, cat_id, supp_id, status, image_id, public_image_id, id]
     )
-    return result.affectedRows
+
+    return { success: true, affectedRows: result.affectedRows };
+
+  } catch (error) {
+    return {
+      success: false,
+      message: error.sqlMessage || 'Error al actualizar producto'
+    }
+  }
 }
 
 export const updateProductStatus = async (id, estado) => {
