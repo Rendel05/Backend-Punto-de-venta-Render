@@ -1,4 +1,5 @@
 export const PredictionService = {
+
   formatHistoricalData(rawRows) {
     let cumulative = 0;
     return rawRows.map(row => {
@@ -12,33 +13,31 @@ export const PredictionService = {
   },
 
   calcularModeloExponencial(historico) {
-    if (historico.length < 2) throw new Error('Muy pocos datos para predecir');
+    if (historico.length < 1) throw new Error('No hay datos históricos');
+
+    const parseYM = mes => {
+      const [y, m] = mes.split('-').map(Number);
+      return y * 12 + (m - 1);
+    };
 
     let acumulado = 0;
-    const serie = historico.map((row, i) => {
+    const rawSerie = historico.map(row => {
       acumulado += row.nuevos;
-      return { mes: row.mes, t: i, N: acumulado };
+      return { mes: row.mes, absT: parseYM(row.mes), N: acumulado };
     });
 
-    const puntos = serie.filter(p => p.N > 0);
-    const n = puntos.length;
+    const t0 = rawSerie[0].absT;
+    const serie = rawSerie.map(p => ({
+      mes: p.mes,
+      t: p.absT - t0,
+      N: p.N
+    }));
 
-    let sumT = 0, sumLnN = 0, sumT2 = 0, sumTLnN = 0;
+    const first = serie[0];
+    const last = serie[serie.length - 1];
 
-    puntos.forEach(p => {
-      const lnN = Math.log(p.N);
-      sumT += p.t;
-      sumLnN += lnN;
-      sumT2 += p.t * p.t;
-      sumTLnN += p.t * lnN;
-    });
-
-    const denom = (n * sumT2 - sumT * sumT);
-    if (denom === 0) throw new Error('Error en cálculo');
-
-    const k = (n * sumTLnN - sumT * sumLnN) / denom;
-    const lnN0 = (sumLnN - k * sumT) / n;
-    const N0 = Math.exp(lnN0);
+    let N0 = first.N;
+    let k = last.t > 0 ? Math.log(last.N / N0) / last.t : 0;
 
     return { N0, k, serie };
   },
@@ -55,7 +54,6 @@ export const PredictionService = {
     cursor.setMonth(cursor.getMonth() + 1);
 
     let paso = 1;
-
     while (cursor <= fechaFin) {
       const t = ultimoPunto.t + paso;
       const Nt = Math.round(N0 * Math.exp(k * t));
